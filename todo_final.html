@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO</title>
+    <style>
+        *{
+            background-color: lavenderblush;
+        }
+       
+        .new_item{
+            cursor: pointer;
+        }
+        ol li{
+            font-size: 30px;
+            color: tomato;
+        }
+        #h li{
+            font-size: 20px;
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <h3 style="color: blue;text-decoration: underline;"> Rules    </h3>
+    <ol id="h">
+        <li>Single click to mark Done</li>
+        <li>Double click to remove from list</li>
+        <li>Empty values can't be added in this list</li>
+    </ol>
+    <div id="main">
+        <input type="text" id="todo">
+        <button id="add">+</button>
+        <ol id="todos"></ol>
+        <button id="clr">Clear All</button>
+    </div>
+
+    <script>
+        let add = document.getElementById("add")
+        let inp = document.getElementById("todo")
+        let todos = document.getElementById("todos")
+        let clr = document.getElementById("clr")
+
+        let savedTodo = JSON.parse(localStorage.getItem("todo")) || []
+        savedTodo.forEach(element => {
+            savedData(element)
+        });
+
+        add.addEventListener("click",()=>{
+            let text = inp.value
+            if(text){
+            savedData(text)
+            savedTodo.push(text)
+            localStorage.setItem("todo",JSON.stringify(savedTodo))
+            
+            inp.value = ""
+            }
+            else{
+                alert("Field can't be empty")
+            }
+        })
+
+        function savedData(text){
+            let n = document.createElement("li")
+            n.className = "new_item"
+            n.innerText = text
+            todos.appendChild(n)
+
+            n.addEventListener("click",()=>{
+                n.style.textDecoration = "line-through"
+            })
+
+            n.addEventListener("dblclick",()=>{
+                todos.removeChild(n)
+                savedTodo = savedTodo.filter(ele => ele!==text)
+                localStorage.setItem("todo",JSON.stringify(savedTodo))
+            })
+        }
+        clr.addEventListener("click",()=>{
+            todos.innerHTML=""
+            savedTodo=[]
+            localStorage.removeItem("todo")
+        })
+
+
+    </script>
+</body>
+</html>
